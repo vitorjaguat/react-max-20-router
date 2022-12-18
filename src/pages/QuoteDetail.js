@@ -1,5 +1,5 @@
-import { Fragment, useEffect } from 'react';
-import { useParams, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Fragment, useEffect, useState } from 'react';
+import { useParams, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import HighlightedQuote from '../components/quotes/HighlightedQuote';
 import Comments from '../components/comments/Comments';
@@ -8,8 +8,9 @@ import { getSingleQuote } from '../lib/api';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 
 const QuoteDetail = () => {
-  const { pathname } = useLocation();
+  const [showComments, setShowComments] = useState(false);
   const params = useParams();
+  const navigate = useNavigate();
 
   const { quoteId } = params;
 
@@ -40,19 +41,39 @@ const QuoteDetail = () => {
     return <p>No quote found!</p>;
   }
 
+  const loadHandler = () => {
+    setShowComments(true);
+  };
+
+  const hideHandler = () => {
+    setShowComments(false);
+    navigate(`/quotes/${quoteId}`);
+  };
+
   return (
     <Fragment>
       <HighlightedQuote text={loadedQuote.text} author={loadedQuote.author} />
       <Routes>
-        <Route path={`${pathname}/comments`} element={<Comments />} />
+        <Route path={`comments/${quoteId}`} element={<Comments />} />
       </Routes>
-      <div className="centered">
-        <Link className="btn--flat" to={`${pathname}/comments`}>
-          Load Comments
-        </Link>
-      </div>
 
-      {/* <Route path={`${pathname}/comments`} element={<Comments />} /> */}
+      {!showComments && (
+        <div className="centered">
+          <Link
+            className="btn--flat"
+            to={`comments/${quoteId}`}
+            onClick={loadHandler}
+          >
+            Load Comments
+          </Link>
+        </div>
+      )}
+
+      {showComments && (
+        <div className="centered btn--flat" onClick={hideHandler}>
+          Hide Comments
+        </div>
+      )}
     </Fragment>
   );
 };
