@@ -21,7 +21,7 @@ function NewsletterSignup() {
   return (
     <section className={classes.newsletter}>
       <h2>Sign up for our weekly newsletter</h2>
-      <form onSubmit={signupForNewsletterHandler}>
+      <fetcher.Form onSubmit={signupForNewsletterHandler}>
         <input
           ref={emailEl}
           id="email"
@@ -30,7 +30,7 @@ function NewsletterSignup() {
           aria-label="Your email address."
         />
         <button>Sign Up</button>
-      </form>
+      </fetcher.Form>
     </section>
   );
 }
